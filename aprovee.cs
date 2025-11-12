@@ -114,7 +114,48 @@ namespace CapaRN
                     return false;
                 }
             }
-            public bool VerificarExistencia()
+
+        public bool ObtenerDatosPorNIT()
+        {
+            this.Conexion.Conectar();
+            string sql = "select " +
+                                 "capvestdor," +
+                                 "capvnomdor," +
+                                 "capvdirdor," +
+                                 "papvcoddor," +
+                                 "capvnitdor," +
+                                 "capvmerdor," +
+                                 "capvteldor " +
+                         "from aprovee " +
+                         "where " +
+                                "capvnitdor = @capvnitdor";
+
+            this.Conexion.PrepararComando(sql);
+
+            this.Conexion.AsignarParametroCadena("@capvnitdor", this._capvnitdor);
+
+            DbDataReader ResultadoConsulta = Conexion.EjecutarConsulta();
+
+            if (ResultadoConsulta.Read())
+            {
+                this._capvestdor = ResultadoConsulta.GetBoolean(0);
+                this._capvnomdor = ResultadoConsulta.GetString(1);
+                this._capvdirdor = ResultadoConsulta.GetString(2);
+                this._papvcoddor = ResultadoConsulta.GetString(3);
+                this._capvnitdor = ResultadoConsulta.GetString(4);
+                this._capvmerdor = ResultadoConsulta.GetString(5);
+                this._capvteldor = ResultadoConsulta.GetString(6);
+                this.Conexion.Desconectar();
+
+                return true;
+            }
+            else
+            {
+                this.Conexion.Desconectar();
+                return false;
+            }
+        }
+        public bool VerificarExistencia()
             { 
                 this.Conexion.Conectar(); 
 			    string sql = "select " + 
