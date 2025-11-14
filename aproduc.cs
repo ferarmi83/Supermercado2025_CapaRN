@@ -159,7 +159,58 @@ namespace CapaRN
                     return false;
                 }
             }
-            public bool VerificarExistencia()
+
+        public bool ObtenerDatosPorCB()
+        {
+            this.Conexion.Conectar();
+            string sql = "select " +
+                                 "capdestado," +
+                                 "capdcansto," +
+                                 "capdconpro," +
+                                 "capdenvpro," +
+                                 "capdfotogr," +
+                                 "capdmarpro," +
+                                 "capdnompro," +
+                                 "capdtippro," +
+                                 "papdcodpro," +
+                                 "capdunimed," +
+                                 "capdcodbar," +
+                                 "capddescor " +
+                         "from aproduc " +
+                         "where " +
+                                "capdcodbar = @capdcodbar";
+
+            this.Conexion.PrepararComando(sql);
+
+            this.Conexion.AsignarParametroCadena("@capdcodbar", this._capdcodbar);
+
+            DbDataReader ResultadoConsulta = Conexion.EjecutarConsulta();
+
+            if (ResultadoConsulta.Read())
+            {
+                this._capdestado = ResultadoConsulta.GetBoolean(0);
+                this._capdcansto = ResultadoConsulta.GetDecimal(1);
+                this._capdconpro = ResultadoConsulta.GetDecimal(2);
+                this._capdenvpro = ResultadoConsulta.GetString(3);
+                this._capdfotogr = ResultadoConsulta.GetString(4);
+                this._capdmarpro = ResultadoConsulta.GetString(5);
+                this._capdnompro = ResultadoConsulta.GetString(6);
+                this._capdtippro = ResultadoConsulta.GetString(7);
+                this._papdcodpro = ResultadoConsulta.GetString(8);
+                this._capdunimed = ResultadoConsulta.GetString(9);
+                this._capdcodbar = ResultadoConsulta.GetString(10);
+                this._capddescor = ResultadoConsulta.GetString(11);
+                this.Conexion.Desconectar();
+
+                return true;
+            }
+            else
+            {
+                this.Conexion.Desconectar();
+                return false;
+            }
+        }
+        public bool VerificarExistencia()
             { 
                 this.Conexion.Conectar(); 
 			    string sql = "select " + 
