@@ -165,8 +165,60 @@ namespace CapaRN
 
                     return true;
                 } 
-            } 
-            public bool Modificar()
+            }
+
+            public bool Grabar(List<aitecom> Items)
+            {
+                xnumcor correlativo = new xnumcor();
+                correlativo.pxnctipcor = "aitecom";
+                if (correlativo.ObtenerSiguiente(Items.Count))
+                {
+                    this.paiccodite = correlativo.cxncnumcor.ToString();
+                }
+                this.Conexion.Conectar();
+                string sql = "insert into aitecom (" +
+                                                       "paiccodite," +                                                                                                              
+                                                       "faiccodpro," +
+                                                       "faiccodcom," +
+                                                       "caiccanpro," +
+                                                       "caicpreuni" +
+                                                ") " +
+                            "values ";
+                bool primero = true;
+                foreach (aitecom a in Items)
+                {
+                    if (!primero)
+                    {
+                        sql = this.Conexion.ObtenerComando() + ",";
+                    }
+                    else
+                        primero = false;
+
+                    sql += "(" +                                          
+                                          "@paiccodite," +
+                                          "@faiccodpro," +
+                                          "@faiccodcom," +
+                                          "@caiccanpro," +
+                                          "@caicpreuni " +
+                                                    ")";
+                    this.Conexion.PrepararComando(sql);
+                
+                this.Conexion.AsignarParametroCadena("@paiccodite", this._paiccodite);
+                this.Conexion.AsignarParametroCadena("@faiccodpro", a.faiccodpro);
+                this.Conexion.AsignarParametroCadena("@faiccodcom", this._faiccodcom);
+                this.Conexion.AsignarParametroDecimal("@caiccanpro", a.caiccanpro);
+                this.Conexion.AsignarParametroDecimal("@caicpreuni", a.caicpreuni);
+                this._paiccodite = (Convert.ToInt32(this._paiccodite) + 1).ToString();
+                }
+                sql = this.Conexion.ObtenerComando();
+                sql = sql.Substring(0, sql.Length - 1);
+                sql += ";";
+                this.Conexion.EjecutarTransaccion();
+                this.Conexion.Desconectar();
+
+                return true;            
+            }
+        public bool Modificar()
             { 
                 if (!this.VerificarExistencia())
                 {
